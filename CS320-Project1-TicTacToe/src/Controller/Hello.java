@@ -12,6 +12,6 @@ public class Hello {
 		System.out.println("Hello, world!");
 		System.out.println("This is AEU.");
 		System.out.println("Again, AEU.");
-		System.out.println("DENIZ2");
+		System.out.println("DENIZ1");
 	}
 }
