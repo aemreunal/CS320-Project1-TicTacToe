@@ -13,5 +13,6 @@ public class Hello {
 		System.out.println("This is AEU.");
 		System.out.println("Again, AEU.");
 		System.out.println("DENIZ1");
+		System.out.println("Test2");
 	}
 }
