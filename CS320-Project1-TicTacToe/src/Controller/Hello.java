@@ -14,5 +14,6 @@ public class Hello {
 		System.out.println("Again, AEU.");
 		System.out.println("DENIZ1");
 		System.out.println("Test2");
+		System.out.println("Test3");
 	}
 }
