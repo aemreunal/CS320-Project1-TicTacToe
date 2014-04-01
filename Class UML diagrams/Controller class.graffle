@@ -843,8 +843,8 @@ REMOTE_GAME\
 			<integer>16</integer>
 			<key>Points</key>
 			<array>
-				<string>{412.50033160629732, 102.87385033822564}</string>
-				<string>{342.9562316844582, 100.33978518539007}</string>
+				<string>{412.50029420724462, 103.00835146100412}</string>
+				<string>{342.95620179623216, 100.62159204046178}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -952,7 +952,7 @@ REMOTE_GAME\
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{33.456487850443096, 137.37627824137115}, {309, 168}}</string>
+					<string>{{33.456487850443096, 137.37627824137115}, {309, 196}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
@@ -986,12 +986,14 @@ REMOTE_GAME\
 - showMainMenu(): void\
 - showRemoteAddrDialog(): void\
 - showGameEndDialog(): void\
++ endGame(Winner): void\
 + localGameButtonPressed(): void\
 + remoteGameButtonPressed(): void\
 + hostGameButtonPressed(): void\
 + joinGameButtonPressed(): void\
 + connectButtonPressed(String ipAddr, int port): void\
 + boardButtonPressed(int buttonID): void\
++ isLocalGame(): boolean\
 - createGame(): void\
 - updateTurnLabel(): void}</string>
 						<key>VerticalPad</key>
@@ -1061,7 +1063,7 @@ REMOTE_GAME\
 	<key>MasterSheets</key>
 	<array/>
 	<key>ModificationDate</key>
-	<string>2014-03-25 15:43:26 +0000</string>
+	<string>2014-04-01 14:03:44 +0000</string>
 	<key>Modifier</key>
 	<string>A. Emre Ünal</string>
 	<key>NotesVisible</key>
