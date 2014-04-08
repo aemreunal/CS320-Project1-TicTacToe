@@ -10,7 +10,7 @@ public class GameLogic {
     private int current_player;
     private Controller controller;
     private Player player;
-    
+
     public GameLogic(Controller controller) {
         board = new int[3][3];
         turn = -1; // Player 1 starts the game
@@ -80,6 +80,7 @@ public class GameLogic {
     }
     
     private void setPiece(int x, int y) {
+        current_player = ((player.equals(Player.PLAYER_1))? -1 : 1);
         if (!controller.isLocalGame() && turn != current_player) {
             // In remote games, players should wait for their turns
             controller.showTurnErrorDialogue();
