@@ -21,6 +21,9 @@ public class NetworkAdapter implements Runnable {
 	private ObjectOutputStream outputStream;
 	private Controller controller;
 	
+	public static void main(String args[]) throws IOException {
+		NetworkAdapter adapter = new NetworkAdapter(null);
+	}
 	public NetworkAdapter(Controller controller) {
 		this.controller = controller;
 	}
