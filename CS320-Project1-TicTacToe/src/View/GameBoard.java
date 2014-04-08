@@ -24,6 +24,7 @@ public class GameBoard extends JPanel {
 		boardButtons = new BoardButton[9];
 		for(int i = 0; i < 9; i++) {
 			boardButtons[i] = new BoardButton(controller, i);
+			add(boardButtons[i]);
 		}
 	}
 	

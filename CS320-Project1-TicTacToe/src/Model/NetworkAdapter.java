@@ -21,45 +21,67 @@ public class NetworkAdapter implements Runnable {
 	private ObjectOutputStream outputStream;
 	private Controller controller;
 	
-	public static void main(String args[]) throws IOException {
-		NetworkAdapter adapter = new NetworkAdapter(null);
-	}
 	public NetworkAdapter(Controller controller) {
 		this.controller = controller;
 	}
 	
 	
-	public void connect(String IP) throws UnknownHostException, IOException {
-		clientSocket = new Socket(InetAddress.getByName( IP ), 12345 );
-		inputStream = new ObjectInputStream(clientSocket.getInputStream());
-		outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+	public void connect(String IP){
+		try {
+			clientSocket = new Socket(InetAddress.getByName( IP ), 12345 );
+			inputStream = new ObjectInputStream(clientSocket.getInputStream());
+			outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
-	public boolean sendPacket(Packet packet) throws IOException {
-		outputStream.writeObject(packet);
-		outputStream.flush();
+	public boolean sendPacket(Packet packet) {
+		try {
+			outputStream.writeObject(packet);
+			outputStream.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return true;
 	}
 	
-	public Packet receivePacket() throws ClassNotFoundException, IOException {
-		Packet packet = (Packet) inputStream.readObject();
+	public Packet receivePacket() {
+		Packet packet = null;
+		try {
+			packet = (Packet) inputStream.readObject();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return packet;
 	}
 	
-	public void host() throws IOException {
-		serverSocket = new ServerSocket(12345);
-		clientSocket = serverSocket.accept();
+	public void host() {
+		try {
+			serverSocket = new ServerSocket(12345);
+			clientSocket = serverSocket.accept();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
-	public void disconnect() throws IOException {
-		clientSocket.close();
-		serverSocket.close();
+	public void disconnect() {
+		try {
+			clientSocket.close();
+			serverSocket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
 		
 	}
 	
