@@ -6,8 +6,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 import Controller.Controller;
@@ -28,11 +30,16 @@ public class NetworkAdapter implements Runnable {
 	
 	public void connect(String IP){
 		try {
-			clientSocket = new Socket(InetAddress.getByName( IP ), 12345 );
+			clientSocket = new Socket();
+			clientSocket.connect(new InetSocketAddress(InetAddress.getByName( IP ), 12345), 5000);	 
 			controller.createGame(GameStatus.REMOTE_GAME);
 			inputStream = new ObjectInputStream(clientSocket.getInputStream());
 			outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
-		} catch (UnknownHostException e) {
+		} 
+		catch (SocketTimeoutException e) {
+			controller.showNetworkTimeoutError();
+		}
+		catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
