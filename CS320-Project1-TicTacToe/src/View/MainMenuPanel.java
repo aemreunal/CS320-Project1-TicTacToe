@@ -2,6 +2,9 @@ package View;
 
 import javax.swing.*;
 import Controller.Controller;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 /*
  * This code belongs to:
  * Ahmet Emre Unal
@@ -16,13 +19,29 @@ public class MainMenuPanel extends JPanel {
 
     public MainMenuPanel(Controller controller){
         this.controller = controller;
-        this.localGameButton = createButton("Start Local Game");
-        this.remoteGameButton = createButton("Start Remote Game");
+        this.createRemoteGameButton();
+        this.createLocalGameButton();
     }
 
-    private JButton createButton(String buttonString){
-        JButton button = new JButton(buttonString);
-        this.add(button);
-        return button;
+    private void createRemoteGameButton() {
+        this.remoteGameButton = new JButton("Start Remote Game");
+        this.remoteGameButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                this.controller.boardButtonPressed(remoteGameButton);
+            }
+        });
+        this.add(remoteGameButton);
+    }
+
+    private void createLocalGameButton() {
+        this.localGameButton = new JButton("Start Local Game");
+        this.localGameButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                this.controller.boardButtonPressed(localGameButton);
+            }
+        });
+        this.add(localGameButton);
     }
 }
