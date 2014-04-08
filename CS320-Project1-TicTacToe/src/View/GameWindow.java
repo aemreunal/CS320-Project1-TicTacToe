@@ -1,5 +1,8 @@
 package View;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -17,6 +20,24 @@ public class GameWindow extends JFrame {
 	private Controller controller;
 	
 	public GameWindow(Controller controller) {
-		
+		this.controller = controller;
+		setWindowProperties();
+	}
+	
+	private void setWindowProperties() {
+		setSize(500, 600);
+		setVisible(true);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent we) {
+				System.exit(0);
+			}
+		});
+	}
+	
+	public void setCurrentPanel(JPanel nextPanel) {
+		remove(currentPanel);
+		currentPanel = nextPanel;
+		add(nextPanel);
 	}
 }
