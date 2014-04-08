@@ -29,6 +29,7 @@ public class BoardButton extends JButton {
                 controller.boardButtonPressed(button);
             }
         });
+        setSize(100, 100);
     }
     
     public void setButtonState(boolean state) {

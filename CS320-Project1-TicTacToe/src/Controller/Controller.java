@@ -89,7 +89,7 @@ public class Controller {
     }
     
     public void boardButtonPressed(BoardButton button) {
-        gameLogic.pressButton(button.getButtonID());
+        gameLogic.pressButton(button);
         button.setButtonState(false);
     }
     

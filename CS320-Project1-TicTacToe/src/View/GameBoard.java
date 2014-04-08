@@ -1,5 +1,7 @@
 package View;
 
+import java.awt.GridLayout;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -13,27 +15,26 @@ import Controller.Controller;
  */
 
 public class GameBoard extends JPanel {
-	JButton[] boardButtons;
-	Controller controller;
-	
-	public GameBoard(Controller controller) {
-		this.controller = controller;
-		
-		createButtons();
-		setSize(300,300);
-	}
-	
-	public void createButtons() {
-		boardButtons = new BoardButton[9];
-		for(int i = 0; i < 9; i++) {
-			boardButtons[i] = new BoardButton(controller, i);
-			add(boardButtons[i]);
-		}
-	}
-	
-	public void setTurn(int turn) {
-		
-	}
-	
-	
+    JButton[] boardButtons;
+    Controller controller;
+    
+    public GameBoard(Controller controller) {
+        this.controller = controller;
+        setLayout(new GridLayout(3, 3));
+        createButtons();
+        setSize(300, 300);
+    }
+    
+    public void createButtons() {
+        boardButtons = new BoardButton[9];
+        for (int i = 0; i < 9; i++) {
+            boardButtons[i] = new BoardButton(controller, i);
+            add(boardButtons[i]);
+        }
+    }
+    
+    public void setTurn(int turn) {
+        
+    }
+    
 }
