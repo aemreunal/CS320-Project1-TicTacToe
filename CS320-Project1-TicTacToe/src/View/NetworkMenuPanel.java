@@ -1,5 +1,7 @@
 package View;
 
+import javax.swing.JPanel;
+
 /*
  * This code belongs to:
  * Ahmet Emre Unal
@@ -7,6 +9,6 @@ package View;
  * emre.unal@ozu.edu.tr
  */
 
-public class NetworkMenuPanel {
-	
+public class NetworkMenuPanel extends JPanel {
+    
 }
