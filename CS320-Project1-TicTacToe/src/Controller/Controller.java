@@ -16,7 +16,7 @@ import View.GameWindow;
 public class Controller {
 	private GameWindow gameWindow;
 	private NetworkAdapter netAdapter;
-	private GameLogic gameModel;
+	private GameLogic gameLogic;
 	private GameStatus status = GameStatus.NOT_RUNNING;
 	
 	public static void main(String[] args) {
@@ -25,6 +25,8 @@ public class Controller {
 	
 	public Controller() {
 		netAdapter = new NetworkAdapter(this);
+		gameWindow = new GameWindow(this);
+		gameLogic = new GameLogic(this);
 	}
 	
 	private void showMainMenu() {

@@ -10,7 +10,7 @@ public class GameLogic {
 
     public GameLogic(Controller controller){
         this.board = new int[3][3];
-        this.turn = - 1;
+        this.turn = - 1; //Player 1 starts the game
         this.player = -1;
         this.controller = controller;
     }
@@ -37,9 +37,9 @@ public class GameLogic {
         int diagonalSum1 = board[0][0] + board[1][1] + board[2][2];
         int diagonalSum2 = board[2][0] + board[1][1] + board[0][2];
         if(diagonalSum1 == 3 || diagonalSum2 == 3){
-            return Winner.PLAYER1;
-        } else if (diagonalSum1 == -3 || diagonalSum2 == -3) {
             return Winner.PLAYER2;
+        } else if (diagonalSum1 == -3 || diagonalSum2 == -3) {
+            return Winner.PLAYER1;
         }
 
         //Check if the game is a draw
@@ -54,8 +54,8 @@ public class GameLogic {
     }
 
     public void setPiece(int x, int y){
-
         if(!controller.isLocalGame() && turn != player){
+        //In remote games, players should wait for their turns
             //TODO show button or do nothing
         } else {
             board[x][y] = turn;
