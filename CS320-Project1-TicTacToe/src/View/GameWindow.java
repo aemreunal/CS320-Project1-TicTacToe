@@ -16,7 +16,7 @@ import Controller.Controller;
  */
 
 public class GameWindow extends JFrame {
-    private JPanel currentPanel;
+    private JPanel currentPanel = null;
     private Controller controller;
     
     public GameWindow(Controller controller) {
@@ -36,7 +36,9 @@ public class GameWindow extends JFrame {
     }
     
     public void setCurrentPanel(JPanel nextPanel) {
-        remove(currentPanel);
+        if (currentPanel != null) {
+            remove(currentPanel);
+        }
         currentPanel = nextPanel;
         add(nextPanel);
     }
