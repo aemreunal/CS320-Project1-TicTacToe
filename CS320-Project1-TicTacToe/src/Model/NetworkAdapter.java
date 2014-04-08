@@ -55,7 +55,7 @@ public class NetworkAdapter implements Runnable {
     
     public boolean sendPacket(Packet packet) {
         try {
-            ObjectOutputStream out = new ObjectOutputStream(outputStream);
+            ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
             out.writeObject(packet);
             out.flush();
         } catch (IOException e) {
@@ -70,7 +70,7 @@ public class NetworkAdapter implements Runnable {
     public Packet receivePacket() {
         Packet packet = null;
         try {
-            ObjectInputStream in = new ObjectInputStream(inputStream);
+            ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
             packet = (Packet) in.readObject();
             MovePacket movePacket = (MovePacket) packet;
             controller.boardButtonPressed(movePacket.getButtonID());
