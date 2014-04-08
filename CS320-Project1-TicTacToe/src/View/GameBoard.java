@@ -18,18 +18,17 @@ public class GameBoard extends JPanel {
 	
 	public GameBoard(Controller controller) {
 		this.controller = controller;
+		
+		createButtons();
+		setSize(300,300);
 	}
 	
-	public void createButton() {
+	public void createButtons() {
 		boardButtons = new BoardButton[9];
 		for(int i = 0; i < 9; i++) {
 			boardButtons[i] = new BoardButton(controller, i);
 			add(boardButtons[i]);
 		}
-	}
-	
-	public void createLabel() {
-		
 	}
 	
 	public void setTurn(int turn) {
