@@ -2,8 +2,10 @@ package Controller;
 
 import javax.swing.JPanel;
 
+import Model.GameLogic;
 import Model.GameStatus;
 import Model.NetworkAdapter;
+import Model.Winner;
 
 /*
  * This code belongs to:
@@ -36,11 +38,47 @@ public class Controller {
 		
 	}
 	
-	private void showGameEndDialogue() {
+	private void createGame() {
+		
+	}
+	
+	private void updateTurnLabel() {
 		
 	}
 	
 	public void endGame(Winner winner) {
 		
+	}
+	
+	private void showGameEndDialogue() {
+		
+	}
+	
+	public void localGameButtonPressed() {
+		
+	}
+	
+	public void remoteGameButtonPressed() {
+		
+	}
+	
+	public void hostGameButtonPressed() {
+		
+	}
+	
+	public void joinGameButtonPressed() {
+		
+	}
+	
+	public void connectButtonPressed(String ipAddr) {
+		
+	}
+	
+	public void boardButtonPressed(int buttonID) {
+		
+	}
+	
+	public boolean isLocalGame() {
+		return status == GameStatus.LOCAL_GAME;
 	}
 }
