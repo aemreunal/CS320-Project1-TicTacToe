@@ -43,4 +43,12 @@ public class GameWindow extends JFrame {
         add(nextPanel);
         currentPanel.updateUI();
     }
+    
+    public void setTurn(Player thisPlayer, Player turn) {
+        setTitle("Player: " + getPlayerText(thisPlayer) + " | Turn: " + getPlayerText(turn));
+    }
+    
+    private String getPlayerText(Player player) {
+        return (player == Player.PLAYER_1 ? "Player 1" : "Player 2");
+    }
 }

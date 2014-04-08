@@ -2,10 +2,9 @@ package Model;
 
 import Controller.Controller;
 import View.BoardButton;
+import View.Player;
 
 public class GameLogic {
-    private static enum Player{ PLAYER1, PLAYER2}
-
     private int[][] board;
     private int turn;
     private int current_player;
@@ -13,13 +12,13 @@ public class GameLogic {
     private Player player;
     
     public GameLogic(Controller controller) {
-        this.board = new int[3][3];
-        this.turn = -1; // Player 1 starts the game
-        this.current_player = -1;
+        board = new int[3][3];
+        turn = -1; // Player 1 starts the game
+        current_player = -1;
         this.controller = controller;
     }
-
-    public GameLogic(Controller controller, Player player){
+    
+    public GameLogic(Controller controller, Player player) {
         this(controller);
         this.player = player;
     }
@@ -80,9 +79,9 @@ public class GameLogic {
         checkForAWin();
     }
     
-    private void setPiece(int x, int y){
-        if(!controller.isLocalGame() && turn != current_player){
-        //In remote games, players should wait for their turns
+    private void setPiece(int x, int y) {
+        if (!controller.isLocalGame() && turn != current_player) {
+            // In remote games, players should wait for their turns
             controller.showTurnErrorDialogue();
         } else {
             board[x][y] = turn;
@@ -103,8 +102,8 @@ public class GameLogic {
     public int getTurn() {
         return turn;
     }
-
-    public Player getPlayer(){
+    
+    public Player getPlayer() {
         return player;
     }
 }

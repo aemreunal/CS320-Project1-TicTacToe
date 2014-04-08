@@ -54,7 +54,7 @@ public class Controller {
     }
     
     private void updateTurnLabel() {
-        
+        gameWindow.setTurn(gameLogic.getPlayer(), gameLogic.getTurn());
     }
     
     public void endGame(Winner winner) {
