@@ -1,8 +1,10 @@
 package Model;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -17,8 +19,8 @@ public class NetworkAdapter implements Runnable {
     private Socket clientSocket;
     boolean isHost;
     
-    private ObjectInputStream inputStream;
-    private ObjectOutputStream outputStream;
+    private InputStream inputStream;
+    private OutputStream outputStream;
     private Controller controller;
     
     public NetworkAdapter(Controller controller) {
@@ -31,9 +33,9 @@ public class NetworkAdapter implements Runnable {
             System.out.println("Created socket");
             clientSocket.connect(new InetSocketAddress(InetAddress.getByName(IP), 12345), 5000);
             System.out.println("Connected to socket");
-            inputStream = new ObjectInputStream(clientSocket.getInputStream());
+            inputStream = clientSocket.getInputStream();
             System.out.println("Input stream created");
-            outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+            outputStream = clientSocket.getOutputStream();
             System.out.println("Output stream created");
             System.out.println("Connection success!");
             return true;
@@ -53,8 +55,9 @@ public class NetworkAdapter implements Runnable {
     
     public boolean sendPacket(Packet packet) {
         try {
-            outputStream.writeObject(packet);
-            outputStream.flush();
+        	ObjectOutputStream out = new ObjectOutputStream(outputStream);
+            out.writeObject(packet);
+            out.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -64,7 +67,9 @@ public class NetworkAdapter implements Runnable {
     public Packet receivePacket() {
         Packet packet = null;
         try {
-            packet = (Packet) inputStream.readObject();
+        	ObjectInputStream in = new ObjectInputStream(inputStream);
+            packet = (Packet) in.readObject();
+            
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
