@@ -69,7 +69,7 @@ public class Controller {
     }
     
     public void remoteGameButtonPressed() {
-        gameWindow.setCurrentPanel(new NetworkMenuPanel());
+        gameWindow.setCurrentPanel(new NetworkMenuPanel(this));
     }
     
     public void hostGameButtonPressed() {
