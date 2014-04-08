@@ -75,16 +75,16 @@ public class GameLogic {
                 controller.showTurnErrorDialogue();
                 return;
             }
-        } else {
-            int id = button.getButtonID();
-            if (turn == -1) {
-                button.setText("X");
-            } else {
-                button.setText("O");
-            }
-            setPiece(id / 3, id % 3);
-            checkForAWin();
         }
+        int id = button.getButtonID();
+        if (turn == -1) {
+            button.setText("X");
+        } else {
+            button.setText("O");
+        }
+        setPiece(id / 3, id % 3);
+        checkForAWin();
+
     }
     
     private void setPiece(int x, int y) {
