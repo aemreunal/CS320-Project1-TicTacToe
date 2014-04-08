@@ -34,7 +34,7 @@ public class NetworkMenuPanel extends JPanel {
                 controller.joinGameButtonPressed();
             }
         });
-        this.add(joinGameButton);
+        add(joinGameButton);
     }
     
     private void createHostGameButton() {
@@ -45,6 +45,6 @@ public class NetworkMenuPanel extends JPanel {
                 controller.hostGameButtonPressed();
             }
         });
-        this.add(hostGameButton);
+        add(hostGameButton);
     }
 }
