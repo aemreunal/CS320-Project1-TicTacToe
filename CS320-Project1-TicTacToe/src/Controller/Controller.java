@@ -43,10 +43,11 @@ public class Controller {
     }
     
     private void showRemoteAddrDialogue() {
-        
+        String ipAddr = JOptionPane.showInputDialog("Please enter the IP address of the host.");
+        connectButtonPressed(ipAddr);
     }
     
-    private void createGame(GameStatus status) {
+    public void createGame(GameStatus status) {
         this.status = status;
         gameLogic = new GameLogic(this);
         gameWindow.setCurrentPanel(new GameBoard(this));
@@ -72,7 +73,7 @@ public class Controller {
     }
     
     public void showTurnErrorDialogue() {
-        
+        JOptionPane.showMessageDialog(gameWindow, "Please wait for the other player to play.");
     }
     
     public void localGameButtonPressed() {
@@ -94,7 +95,6 @@ public class Controller {
     
     public void connectButtonPressed(String ipAddr) {
         netAdapter.connect(ipAddr);
-        createGame(GameStatus.REMOTE_GAME);
     }
     
     public void boardButtonPressed(BoardButton button) {
