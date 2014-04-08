@@ -1,6 +1,7 @@
 package Model;
 
 import Controller.Controller;
+import View.BoardButton;
 
 import javax.swing.*;
 
@@ -55,7 +56,13 @@ public class GameLogic {
        return allCellAreOccupied ? Winner.DRAW : Winner.NOT_COMPLETED;
     }
 
-    public void pressButton(int id){
+    public void pressButton(BoardButton button){
+        int id = button.getButtonID();
+        if(turn == -1){
+            button.setText("X");
+        } else {
+            button.setText("O");
+        }
         setPiece(id / 3, id % 3);
     }
 
@@ -81,13 +88,5 @@ public class GameLogic {
 
     public int getTurn(){
         return this.turn;
-    }
-
-    public void setButtonText(JButton button){
-        if(turn == -1){
-            button.setText("X");
-        } else {
-            button.setText("O");
-        }
     }
 }
