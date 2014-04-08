@@ -2,6 +2,8 @@ package Model;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -10,13 +12,13 @@ import java.net.UnknownHostException;
 
 import Controller.Controller;
 
-public class NetworkAdapter {
+public class NetworkAdapter implements Runnable {
 	private ServerSocket serverSocket;
 	private Socket clientSocket;
 	boolean isHost;
-	
-	private InputStream inputStream;
-	private OutputStream outputStream;
+
+	private ObjectInputStream inputStream;
+	private ObjectOutputStream outputStream;
 	private Controller controller;
 	
 	public NetworkAdapter(Controller controller) {
@@ -26,28 +28,35 @@ public class NetworkAdapter {
 	
 	public void connect(String IP) throws UnknownHostException, IOException {
 		clientSocket = new Socket(InetAddress.getByName( IP ), 12345 );
-		inputStream = clientSocket.getInputStream();
-		outputStream = clientSocket.getOutputStream();
+		inputStream = new ObjectInputStream(clientSocket.getInputStream());
+		outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
 	}
 	
-	public boolean sendPacket(Packet packet) {
-		
-		
+	public boolean sendPacket(Packet packet) throws IOException {
+		outputStream.writeObject(packet);
+		outputStream.flush();
 		return true;
 	}
 	
-	public Packet receivePacket() {
-		
-		
-		
-		return null;
+	public Packet receivePacket() throws ClassNotFoundException, IOException {
+		Packet packet = (Packet) inputStream.readObject();
+		return packet;
 	}
 	
-	public void host() {
-		
+	public void host() throws IOException {
+		serverSocket = new ServerSocket(12345);
+		clientSocket = serverSocket.accept();
 	}
 	
-	public void disconnect() {
+	public void disconnect() throws IOException {
+		clientSocket.close();
+		serverSocket.close();
+	}
+
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
 		
 	}
 	
