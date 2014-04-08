@@ -69,25 +69,25 @@ public class GameLogic {
     }
     
     public void pressButton(BoardButton button) {
-        int id = button.getButtonID();
-        if (turn == -1) {
-            button.setText("X");
+        current_player = ((player.equals(Player.PLAYER_1))? -1 : 1);
+        if (!controller.isLocalGame() && turn != current_player) {
+            controller.showTurnErrorDialogue();
+            return;
         } else {
-            button.setText("O");
+            int id = button.getButtonID();
+            if (turn == -1) {
+                button.setText("X");
+            } else {
+                button.setText("O");
+            }
+            setPiece(id / 3, id % 3);
+            checkForAWin();
         }
-        setPiece(id / 3, id % 3);
-        checkForAWin();
     }
     
     private void setPiece(int x, int y) {
-        current_player = ((player.equals(Player.PLAYER_1))? -1 : 1);
-        if (!controller.isLocalGame() && turn != current_player) {
-            // In remote games, players should wait for their turns
-            controller.showTurnErrorDialogue();
-        } else {
-            board[x][y] = turn;
-            changeTurn();
-        }
+        board[x][y] = turn;
+        changeTurn();
     }
     
     public void changeTurn() {
