@@ -72,10 +72,10 @@ public class GameLogic {
         checkForAWin();
     }
     
-    private void setPiece(int x, int y) {
-        if (!controller.isLocalGame() && turn != player) {
-            // In remote games, players should wait for their turns
-            // TODO show button or do nothing
+    private void setPiece(int x, int y){
+        if(!controller.isLocalGame() && turn != player){
+        //In remote games, players should wait for their turns
+            controller.showTurnErrorDialogue();
         } else {
             board[x][y] = turn;
             changeTurn();
