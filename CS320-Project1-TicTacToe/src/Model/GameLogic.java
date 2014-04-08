@@ -53,7 +53,11 @@ public class GameLogic {
        return allCellAreOccupied ? Winner.DRAW : Winner.NOT_COMPLETED;
     }
 
-    public void setPiece(int x, int y){
+    public void pressButton(int id){
+        setPiece(id / 3, id % 3);
+    }
+
+    private void setPiece(int x, int y){
         if(!controller.isLocalGame() && turn != player){
         //In remote games, players should wait for their turns
             //TODO show button or do nothing

@@ -15,30 +15,31 @@ import Controller.Controller;
  */
 
 public class BoardButton extends JButton {
-	private int buttonID;
-	private Controller controller;
-	
-	public BoardButton(Controller cont, int id) {
-		controller = cont;
-		buttonID = id;
-		addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				controller.boardButtonPressed(buttonID);
-			}
-		});
-	}
-	
-	
-	public void setButtonState(boolean state) {
-		setEnabled(state);
-	}
-	
-	public void setButtonText(String text) {
-		setText(text);
-	}
-	
-	public int getButtonID() {
-		return buttonID;
-	}
+    private int buttonID;
+    private Controller controller;
+    private BoardButton button = this;
+    
+    public BoardButton(Controller cont, int id) {
+        controller = cont;
+        buttonID = id;
+        
+        addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.boardButtonPressed(button);
+            }
+        });
+    }
+    
+    public void setButtonState(boolean state) {
+        setEnabled(state);
+    }
+    
+    public void setButtonText(String text) {
+        setText(text);
+    }
+    
+    public int getButtonID() {
+        return buttonID;
+    }
 }

@@ -7,7 +7,6 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import Controller.Controller;
-
 /*
  * This code belongs to:
  * Ahmet Emre Unal
@@ -16,7 +15,6 @@ import Controller.Controller;
  */
 
 public class NetworkMenuPanel extends JPanel {
-	
 	JButton[] boardButtons;
 	Controller controller;
 	
