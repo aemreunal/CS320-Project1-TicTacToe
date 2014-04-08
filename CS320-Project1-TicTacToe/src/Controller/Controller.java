@@ -54,6 +54,10 @@ public class Controller {
 		
 	}
 	
+	public void showTurnErrorDialogue() {
+		
+	}
+	
 	public void localGameButtonPressed() {
 		
 	}
