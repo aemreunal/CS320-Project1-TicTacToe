@@ -43,6 +43,19 @@ public class Controller {
         
     }
     
+    public void startLocalGame() {
+        
+    }
+    
+    public void startHostedGame() {
+        
+    }
+    
+    public void startJoinedGame() {
+        status = GameStatus.LOCAL_GAME;
+        createGame();
+    }
+    
     private void createGame() {
         gameLogic = new GameLogic(this);
         gameWindow.setCurrentPanel(new GameBoard(this));
@@ -65,7 +78,7 @@ public class Controller {
     }
     
     public void localGameButtonPressed() {
-        
+        startLocalGame();
     }
     
     public void remoteGameButtonPressed() {
@@ -87,7 +100,7 @@ public class Controller {
     }
     
     public void boardButtonPressed(BoardButton button) {
-        // gameLogic.buttonPressed(button.getButtonID());
+        gameLogic.pressButton(button.getButtonID());
         button.setButtonState(false);
     }
     
