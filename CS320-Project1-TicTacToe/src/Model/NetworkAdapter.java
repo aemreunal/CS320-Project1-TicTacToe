@@ -28,13 +28,15 @@ public class NetworkAdapter implements Runnable {
 	}
 	
 	
-	public void connect(String IP){
+	public boolean connect(String IP){
 		try {
 			clientSocket = new Socket();
 			clientSocket.connect(new InetSocketAddress(InetAddress.getByName( IP ), 12345), 5000);	 
-			controller.createGame(GameStatus.REMOTE_GAME);
+			//controller.createGame(GameStatus.REMOTE_GAME);
 			inputStream = new ObjectInputStream(clientSocket.getInputStream());
 			outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+			
+			return true;
 		} 
 		catch (SocketTimeoutException e) {
 			controller.showNetworkTimeoutError();
@@ -44,6 +46,8 @@ public class NetworkAdapter implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		return false;
 	}
 	
 	public boolean sendPacket(Packet packet) {
@@ -68,13 +72,16 @@ public class NetworkAdapter implements Runnable {
 		return packet;
 	}
 	
-	public void host() {
+	public boolean host() {
 		try {
 			serverSocket = new ServerSocket(12345);
 			clientSocket = serverSocket.accept();
+			
+			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return false;
 	}
 	
 	public void disconnect() {
