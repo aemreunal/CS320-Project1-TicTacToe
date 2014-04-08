@@ -69,10 +69,12 @@ public class GameLogic {
     }
     
     public void pressButton(BoardButton button) {
-        current_player = ((player.equals(Player.PLAYER_1))? -1 : 1);
-        if (!controller.isLocalGame() && turn != current_player) {
-            controller.showTurnErrorDialogue();
-            return;
+        if (!controller.isLocalGame()) {
+            current_player = ((player.equals(Player.PLAYER_1))? -1 : 1);
+            if(turn != current_player) {
+                controller.showTurnErrorDialogue();
+                return;
+            }
         } else {
             int id = button.getButtonID();
             if (turn == -1) {
