@@ -55,10 +55,13 @@ public class NetworkAdapter implements Runnable {
     
     public boolean sendPacket(Packet packet) {
         try {
-        	ObjectOutputStream out = new ObjectOutputStream(outputStream);
+            ObjectOutputStream out = new ObjectOutputStream(outputStream);
             out.writeObject(packet);
             out.flush();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            System.err.println("Unable to create the ObjectOutputStream!");
             e.printStackTrace();
         }
         return true;
@@ -67,9 +70,10 @@ public class NetworkAdapter implements Runnable {
     public Packet receivePacket() {
         Packet packet = null;
         try {
-        	ObjectInputStream in = new ObjectInputStream(inputStream);
+            ObjectInputStream in = new ObjectInputStream(inputStream);
             packet = (Packet) in.readObject();
-            
+            MovePacket movePacket = (MovePacket) packet;
+            controller.boardButtonPressed(movePacket.getButtonID());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

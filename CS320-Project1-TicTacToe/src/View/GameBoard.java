@@ -2,7 +2,6 @@ package View;
 
 import java.awt.GridLayout;
 
-import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import Controller.Controller;
@@ -15,7 +14,7 @@ import Controller.Controller;
  */
 
 public class GameBoard extends JPanel {
-    JButton[] boardButtons;
+    BoardButton[] boardButtons;
     Controller controller;
     
     public GameBoard(Controller controller) {
@@ -33,8 +32,12 @@ public class GameBoard extends JPanel {
         }
     }
     
-    public void setTurn(int turn) {
-        
+    public BoardButton getButton(int buttonID) {
+        for (BoardButton button : boardButtons) {
+            if (button.getButtonID() == buttonID) {
+                return button;
+            }
+        }
+        return null;
     }
-    
 }

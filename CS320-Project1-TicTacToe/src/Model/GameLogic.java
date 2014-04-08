@@ -10,7 +10,7 @@ public class GameLogic {
     private int current_player;
     private Controller controller;
     private Player player;
-
+    
     public GameLogic(Controller controller) {
         board = new int[3][3];
         turn = -1; // Player 1 starts the game
@@ -70,12 +70,13 @@ public class GameLogic {
     
     public void pressButton(BoardButton button) {
         if (!controller.isLocalGame()) {
-            current_player = ((player.equals(Player.PLAYER_1))? -1 : 1);
-            if(turn != current_player) {
+            current_player = ((player.equals(Player.PLAYER_1)) ? -1 : 1);
+            if (turn != current_player) {
                 controller.showTurnErrorDialogue();
                 return;
             }
         }
+        button.setButtonState(false);
         int id = button.getButtonID();
         if (turn == -1) {
             button.setText("X");
@@ -84,7 +85,7 @@ public class GameLogic {
         }
         setPiece(id / 3, id % 3);
         checkForAWin();
-
+        
     }
     
     private void setPiece(int x, int y) {

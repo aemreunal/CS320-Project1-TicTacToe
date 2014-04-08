@@ -4,6 +4,7 @@ import javax.swing.JOptionPane;
 
 import Model.GameLogic;
 import Model.GameStatus;
+import Model.MovePacket;
 import Model.NetworkAdapter;
 import Model.Winner;
 import View.BoardButton;
@@ -24,6 +25,7 @@ public class Controller {
     private GameWindow gameWindow;
     private NetworkAdapter netAdapter;
     private GameLogic gameLogic;
+    private GameBoard gameBoard;
     private GameStatus status = GameStatus.NOT_RUNNING;
     private int joinedGame = -1;
     
@@ -63,7 +65,8 @@ public class Controller {
         } else if (joinedGame == 1 /* True, Player 2 */) {
             gameLogic = new GameLogic(this, Player.PLAYER_2);
         }
-        gameWindow.setCurrentPanel(new GameBoard(this));
+        gameBoard = new GameBoard(this);
+        gameWindow.setCurrentPanel(gameBoard);
         updateTurnLabel();
     }
     
@@ -79,6 +82,7 @@ public class Controller {
         status = GameStatus.NOT_RUNNING;
         gameWindow.clearTurn();
         joinedGame = -1;
+        gameBoard = null;
     }
     
     public void showNetworkTimeoutError() {
@@ -130,7 +134,15 @@ public class Controller {
     
     public void boardButtonPressed(BoardButton button) {
         gameLogic.pressButton(button);
-        button.setButtonState(false);
+        if (status == GameStatus.REMOTE_GAME) {
+            netAdapter.sendPacket(new MovePacket(button.getButtonID()));
+        }
+        updateTurnLabel();
+    }
+    
+    public void boardButtonPressed(int buttonID) {
+        BoardButton pressedButton = gameBoard.getButton(buttonID);
+        gameLogic.pressButton(pressedButton);
         updateTurnLabel();
     }
     
