@@ -10,7 +10,6 @@ import View.BoardButton;
 import View.GameBoard;
 import View.GameWindow;
 import View.MainMenuPanel;
-import View.NetworkMenuPanel;
 
 /*
  * This code belongs to:
@@ -43,7 +42,8 @@ public class Controller {
     }
     
     private void showRemoteAddrDialogue() {
-        String ipAddr = JOptionPane.showInputDialog("Please enter the IP address of the host.");
+        String ipAddr = JOptionPane.showInputDialog("Please enter the IP address of the host:");
+        System.out.println(ipAddr);
         connectButtonPressed(ipAddr);
     }
     
@@ -58,8 +58,14 @@ public class Controller {
     }
     
     public void endGame(Winner winner) {
-        showGameEndDialogue(winner);
+        if (winner != Winner.NOT_COMPLETED || winner != null) {
+            showGameEndDialogue(winner);
+        }
         showMainMenu();
+    }
+    
+    public void showNetworkTimeoutError() {
+        JOptionPane.showMessageDialog(gameWindow, "Could not connect to host!");
     }
     
     private void showGameEndDialogue(Winner winner) {
@@ -81,7 +87,7 @@ public class Controller {
     }
     
     public void remoteGameButtonPressed() {
-        gameWindow.setCurrentPanel(new NetworkMenuPanel(this));
+        showRemoteAddrDialogue();
     }
     
     public void hostGameButtonPressed() {

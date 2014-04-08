@@ -22,8 +22,8 @@ public class MainMenuPanel extends JPanel {
     
     public MainMenuPanel(Controller controller) {
         this.controller = controller;
-        createRemoteGameButton();
         createLocalGameButton();
+        createRemoteGameButton();
     }
     
     private void createRemoteGameButton() {
