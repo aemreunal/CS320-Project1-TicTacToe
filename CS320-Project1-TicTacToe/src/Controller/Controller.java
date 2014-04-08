@@ -10,6 +10,8 @@ import View.BoardButton;
 import View.GameBoard;
 import View.GameWindow;
 import View.MainMenuPanel;
+import View.NetworkMenuPanel;
+import View.Player;
 
 /*
  * This code belongs to:
@@ -23,6 +25,7 @@ public class Controller {
     private NetworkAdapter netAdapter;
     private GameLogic gameLogic;
     private GameStatus status = GameStatus.NOT_RUNNING;
+    private int joinedGame = -1;
     
     public static void main(String[] args) {
         new Controller();
@@ -36,9 +39,19 @@ public class Controller {
     
     private void showMainMenu() {
         netAdapter.disconnect();
-        gameLogic = new GameLogic(this);
+        if (joinedGame == -1) {
+            gameLogic = new GameLogic(this);
+        } else if (joinedGame == 0 /* False, Player 1 */) {
+            gameLogic = new GameLogic(this, Player.PLAYER_1);
+        } else if (joinedGame == 1 /* True, Player 2 */) {
+            gameLogic = new GameLogic(this, Player.PLAYER_2);
+        }
         status = GameStatus.NOT_RUNNING;
         gameWindow.setCurrentPanel(new MainMenuPanel(this));
+    }
+    
+    private void showNetworkMenu() {
+        gameWindow.setCurrentPanel(new NetworkMenuPanel(this));
     }
     
     private void showRemoteAddrDialogue() {
@@ -66,6 +79,7 @@ public class Controller {
         showMainMenu();
         status = GameStatus.NOT_RUNNING;
         gameWindow.clearTurn();
+        joinedGame = -1;
     }
     
     public void showNetworkTimeoutError() {
@@ -91,12 +105,15 @@ public class Controller {
     }
     
     public void remoteGameButtonPressed() {
-        showRemoteAddrDialogue();
+        showNetworkMenu();
     }
     
     public void hostGameButtonPressed() {
-        // Update graphic
-        netAdapter.host();
+        gameWindow.setTitle("Waiting for connection...");
+        if (netAdapter.host()) {
+            joinedGame = 0;
+            createGame(GameStatus.REMOTE_GAME);
+        }
     }
     
     public void joinGameButtonPressed() {
@@ -104,7 +121,10 @@ public class Controller {
     }
     
     public void connectButtonPressed(String ipAddr) {
-        netAdapter.connect(ipAddr);
+        if (netAdapter.connect(ipAddr)) {
+            joinedGame = 1;
+            createGame(GameStatus.REMOTE_GAME);
+        }
     }
     
     public void boardButtonPressed(BoardButton button) {

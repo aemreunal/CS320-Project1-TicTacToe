@@ -24,7 +24,6 @@ public class NetworkMenuPanel extends JPanel {
         this.controller = controller;
         createJoinGameButton();
         createHostGameButton();
-        setSize(300, 300);
     }
     
     private void createJoinGameButton() {
@@ -35,17 +34,17 @@ public class NetworkMenuPanel extends JPanel {
                 controller.joinGameButtonPressed();
             }
         });
-        add(joinGameButton);
+        this.add(joinGameButton);
     }
     
     private void createHostGameButton() {
-        joinGameButton = new JButton("Host Game");
-        joinGameButton.addActionListener(new ActionListener() {
+        hostGameButton = new JButton("Host Game");
+        hostGameButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.hostGameButtonPressed();
             }
         });
-        add(hostGameButton);
+        this.add(hostGameButton);
     }
 }
