@@ -4,16 +4,24 @@ import Controller.Controller;
 import View.BoardButton;
 
 public class GameLogic {
+    private static enum Player{ PLAYER1, PLAYER2}
+
     private int[][] board;
     private int turn;
-    private int player;
+    private int current_player;
     private Controller controller;
+    private Player player;
     
     public GameLogic(Controller controller) {
-        board = new int[3][3];
-        turn = -1; // Player 1 starts the game
-        player = -1;
+        this.board = new int[3][3];
+        this.turn = -1; // Player 1 starts the game
+        this.current_player = -1;
         this.controller = controller;
+    }
+
+    public GameLogic(Controller controller, Player player){
+        this(controller);
+        this.player = player;
     }
     
     public void checkForAWin() {
@@ -73,7 +81,7 @@ public class GameLogic {
     }
     
     private void setPiece(int x, int y){
-        if(!controller.isLocalGame() && turn != player){
+        if(!controller.isLocalGame() && turn != current_player){
         //In remote games, players should wait for their turns
             controller.showTurnErrorDialogue();
         } else {
@@ -85,10 +93,10 @@ public class GameLogic {
     public void changeTurn() {
         if (turn == 1) {
             turn = -1;
-            player = -1;
+            current_player = -1;
         } else {
             turn = 1;
-            player = 1;
+            current_player = 1;
         }
     }
     
