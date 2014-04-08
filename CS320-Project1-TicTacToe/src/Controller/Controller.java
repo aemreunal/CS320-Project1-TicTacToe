@@ -30,6 +30,7 @@ public class Controller {
     public Controller() {
         netAdapter = new NetworkAdapter(this);
         gameWindow = new GameWindow(this);
+        showMainMenu();
     }
     
     private void showMainMenu() {
@@ -43,20 +44,8 @@ public class Controller {
         
     }
     
-    public void startLocalGame() {
-        
-    }
-    
-    public void startHostedGame() {
-        
-    }
-    
-    public void startJoinedGame() {
-        status = GameStatus.LOCAL_GAME;
-        createGame();
-    }
-    
-    private void createGame() {
+    private void createGame(GameStatus status) {
+        this.status = status;
         gameLogic = new GameLogic(this);
         gameWindow.setCurrentPanel(new GameBoard(this));
     }
@@ -78,7 +67,7 @@ public class Controller {
     }
     
     public void localGameButtonPressed() {
-        startLocalGame();
+        createGame(GameStatus.LOCAL_GAME);
     }
     
     public void remoteGameButtonPressed() {
@@ -96,7 +85,7 @@ public class Controller {
     
     public void connectButtonPressed(String ipAddr) {
         netAdapter.connect(ipAddr);
-        createGame();
+        createGame(GameStatus.REMOTE_GAME);
     }
     
     public void boardButtonPressed(BoardButton button) {
