@@ -43,18 +43,20 @@ public class Controller {
     
     private void showRemoteAddrDialogue() {
         String ipAddr = JOptionPane.showInputDialog("Please enter the IP address of the host:");
-        System.out.println(ipAddr);
-        connectButtonPressed(ipAddr);
+        if (ipAddr != null && (!ipAddr.equals(""))) {
+            connectButtonPressed(ipAddr);
+        }
     }
     
     public void createGame(GameStatus status) {
         this.status = status;
         gameLogic = new GameLogic(this);
         gameWindow.setCurrentPanel(new GameBoard(this));
+        updateTurnLabel();
     }
     
     private void updateTurnLabel() {
-        
+        gameWindow.setTurn(gameLogic.getPlayer(), gameLogic.getTurn());
     }
     
     public void endGame(Winner winner) {
@@ -62,6 +64,8 @@ public class Controller {
             showGameEndDialogue(winner);
         }
         showMainMenu();
+        status = GameStatus.NOT_RUNNING;
+        gameWindow.clearTurn();
     }
     
     public void showNetworkTimeoutError() {
@@ -106,9 +110,14 @@ public class Controller {
     public void boardButtonPressed(BoardButton button) {
         gameLogic.pressButton(button);
         button.setButtonState(false);
+        updateTurnLabel();
     }
     
     public boolean isLocalGame() {
         return status == GameStatus.LOCAL_GAME;
+    }
+    
+    public GameStatus getGameStatus() {
+        return status;
     }
 }

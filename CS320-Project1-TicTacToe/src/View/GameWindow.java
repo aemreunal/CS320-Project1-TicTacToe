@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import Controller.Controller;
+import Model.GameStatus;
 
 /*
  * This code belongs to:
@@ -42,5 +43,23 @@ public class GameWindow extends JFrame {
         currentPanel = nextPanel;
         add(nextPanel);
         currentPanel.updateUI();
+    }
+    
+    public void clearTurn() {
+        setTitle("");
+    }
+    
+    public void setTurn(Player thisPlayer, Player turn) {
+        if (controller.getGameStatus() != GameStatus.NOT_RUNNING) {
+            if (controller.isLocalGame()) {
+                setTitle("Turn: " + getPlayerText(turn));
+            } else {
+                setTitle("Player: " + getPlayerText(thisPlayer) + " | Turn: " + getPlayerText(turn));
+            }
+        }
+    }
+    
+    private String getPlayerText(Player player) {
+        return (player == Player.PLAYER_1 ? "Player 1" : "Player 2");
     }
 }
