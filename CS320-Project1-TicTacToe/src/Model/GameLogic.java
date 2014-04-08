@@ -99,8 +99,8 @@ public class GameLogic {
         }
     }
     
-    public int getTurn() {
-        return turn;
+    public Player getTurn() {
+        return turn == -1 ? Player.PLAYER_1 : Player.PLAYER_2;
     }
     
     public Player getPlayer() {
