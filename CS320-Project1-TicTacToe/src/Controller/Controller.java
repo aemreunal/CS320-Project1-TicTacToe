@@ -1,5 +1,7 @@
 package Controller;
 
+import javax.swing.JOptionPane;
+
 import Model.GameLogic;
 import Model.GameStatus;
 import Model.NetworkAdapter;
@@ -56,10 +58,17 @@ public class Controller {
     
     public void endGame(Winner winner) {
         showGameEndDialogue(winner);
+        showMainMenu();
     }
     
     private void showGameEndDialogue(Winner winner) {
-        
+        if (winner == Winner.DRAW) {
+            JOptionPane.showMessageDialog(gameWindow, "It's a draw!");
+        } else if (winner == Winner.PLAYER1) {
+            JOptionPane.showMessageDialog(gameWindow, "Player 1 won!");
+        } else if (winner == Winner.PLAYER2) {
+            JOptionPane.showMessageDialog(gameWindow, "Player 2 won!");
+        }
     }
     
     public void showTurnErrorDialogue() {
