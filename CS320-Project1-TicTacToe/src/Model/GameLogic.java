@@ -9,17 +9,19 @@ public class GameLogic {
     private int turn;
     private int current_player;
     private Controller controller;
+    private NetworkAdapter netAdapter;
     private Player player;
     
-    public GameLogic(Controller controller) {
+    public GameLogic(Controller controller, NetworkAdapter netAdapter) {
         board = new int[3][3];
         turn = -1; // Player 1 starts the game
         current_player = -1;
         this.controller = controller;
+        this.netAdapter = netAdapter;
     }
     
-    public GameLogic(Controller controller, Player player) {
-        this(controller);
+    public GameLogic(Controller controller, NetworkAdapter netAdapter, Player player) {
+        this(controller, netAdapter);
         this.player = player;
     }
     
@@ -68,13 +70,16 @@ public class GameLogic {
         }
     }
     
-    public void pressButton(BoardButton button) {
-        if (!controller.isLocalGame()) {
+    public boolean pressButton(BoardButton button, boolean remoteMove) {
+        if (!controller.isLocalGame() && !remoteMove) {
             current_player = ((player.equals(Player.PLAYER_1)) ? -1 : 1);
             if (turn != current_player) {
                 controller.showTurnErrorDialogue();
-                return;
+                return false;
             }
+        }
+        if (controller.getGameStatus() == GameStatus.REMOTE_GAME) {
+            netAdapter.sendPacket(new MovePacket(button.getButtonID()));
         }
         button.setButtonState(false);
         int id = button.getButtonID();
@@ -85,7 +90,7 @@ public class GameLogic {
         }
         setPiece(id / 3, id % 3);
         checkForAWin();
-        
+        return true;
     }
     
     private void setPiece(int x, int y) {

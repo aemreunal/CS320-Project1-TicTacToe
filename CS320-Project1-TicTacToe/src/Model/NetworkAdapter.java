@@ -1,5 +1,6 @@
 package Model;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -53,7 +54,7 @@ public class NetworkAdapter implements Runnable {
         return false;
     }
     
-    public boolean sendPacket(Packet packet) {
+    public void sendPacket(Packet packet) {
         try {
             ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
             out.writeObject(packet);
@@ -64,21 +65,25 @@ public class NetworkAdapter implements Runnable {
             System.err.println("Unable to create the ObjectOutputStream!");
             e.printStackTrace();
         }
-        return true;
     }
     
-    public MovePacket receivePacket() {
+    public boolean receivePacket() {
         try {
             ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
             Packet packet = (Packet) in.readObject();
             MovePacket movePacket = (MovePacket) packet;
-            return movePacket;
+            System.out.println("Got move " + movePacket.getButtonID());
+            controller.boardButtonPressed(movePacket.getButtonID());
+            return true;
         } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (EOFException e) {
+            // Means the connection is terminated
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return false;
     }
     
     public boolean host() {
@@ -109,7 +114,9 @@ public class NetworkAdapter implements Runnable {
     
     @Override
     public void run() {
-        
+        if (!receivePacket()) {
+            controller.endGame(Winner.NOT_COMPLETED);
+        }
     }
     
 }

@@ -4,7 +4,6 @@ import javax.swing.JOptionPane;
 
 import Model.GameLogic;
 import Model.GameStatus;
-import Model.MovePacket;
 import Model.NetworkAdapter;
 import Model.Winner;
 import View.BoardButton;
@@ -24,6 +23,7 @@ import View.Player;
 public class Controller {
     private GameWindow gameWindow;
     private NetworkAdapter netAdapter;
+    private Thread netAdapterThread;
     private GameLogic gameLogic;
     private GameBoard gameBoard;
     private GameStatus status = GameStatus.NOT_RUNNING;
@@ -35,12 +35,14 @@ public class Controller {
     
     public Controller() {
         netAdapter = new NetworkAdapter(this);
+        netAdapterThread = new Thread(netAdapter);
         gameWindow = new GameWindow(this);
         showMainMenu();
     }
     
     private void showMainMenu() {
         netAdapter.disconnect();
+        stopListeningForMove();
         status = GameStatus.NOT_RUNNING;
         gameWindow.setCurrentPanel(new MainMenuPanel(this));
     }
@@ -59,18 +61,16 @@ public class Controller {
     public void createGame(GameStatus status) {
         this.status = status;
         if (joinedGame == -1) {
-            gameLogic = new GameLogic(this);
+            gameLogic = new GameLogic(this, netAdapter);
         } else if (joinedGame == 0 /* False, Player 1 */) {
-            gameLogic = new GameLogic(this, Player.PLAYER_1);
+            gameLogic = new GameLogic(this, netAdapter, Player.PLAYER_1);
         } else if (joinedGame == 1 /* True, Player 2 */) {
-            gameLogic = new GameLogic(this, Player.PLAYER_2);
+            gameLogic = new GameLogic(this, netAdapter, Player.PLAYER_2);
+            startListeningForMove();
         }
         gameBoard = new GameBoard(this);
         gameWindow.setCurrentPanel(gameBoard);
         updateTurnLabel();
-        if (joinedGame == 1) {
-            startListeningForMove();
-        }
     }
     
     private void updateTurnLabel() {
@@ -136,30 +136,26 @@ public class Controller {
     }
     
     public void boardButtonPressed(BoardButton button) {
-        gameLogic.pressButton(button);
+        boolean pressed = gameLogic.pressButton(button, false);
         updateTurnLabel();
         gameBoard.updateUI();
-        if (status == GameStatus.REMOTE_GAME) {
-            System.out.println("Sending move");
-            netAdapter.sendPacket(new MovePacket(button.getButtonID()));
-            System.out.println("Sent move");
-            startListeningForMove();
-        }
+        startListeningForMove();
+    }
+    
+    public void boardButtonPressed(int buttonID) {
+        BoardButton pressedButton = gameBoard.getButton(buttonID);
+        gameLogic.pressButton(pressedButton, true);
+        updateTurnLabel();
+        gameBoard.updateUI();
+        stopListeningForMove();
     }
     
     private void startListeningForMove() {
-        System.out.println("Start listening");
-        MovePacket packet = netAdapter.receivePacket();
-        System.out.println("Got move");
-        boardButtonPressed(packet.getButtonID());
-        System.out.println("Executed move");
+        netAdapterThread.start();
     }
     
-    private void boardButtonPressed(int buttonID) {
-        BoardButton pressedButton = gameBoard.getButton(buttonID);
-        gameLogic.pressButton(pressedButton);
-        updateTurnLabel();
-        gameBoard.updateUI();
+    private void stopListeningForMove() {
+        netAdapterThread.suspend();
     }
     
     public boolean isLocalGame() {
