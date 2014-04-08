@@ -36,7 +36,7 @@ public class Controller {
         netAdapter.disconnect();
         gameLogic = new GameLogic(this);
         status = GameStatus.NOT_RUNNING;
-        gameWindow.setCurrentPanel(new MainMenuPanel());
+        gameWindow.setCurrentPanel(new MainMenuPanel(this));
     }
     
     private void showRemoteAddrDialogue() {
