@@ -2,6 +2,8 @@ package Model;
 
 import Controller.Controller;
 
+import javax.swing.*;
+
 public class GameLogic {
     private int[][] board;
     private int turn;
@@ -79,5 +81,13 @@ public class GameLogic {
 
     public int getTurn(){
         return this.turn;
+    }
+
+    public void setButtonText(JButton button){
+        if(turn == -1){
+            button.setText("X");
+        } else {
+            button.setText("O");
+        }
     }
 }
