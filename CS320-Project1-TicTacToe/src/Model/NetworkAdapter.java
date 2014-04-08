@@ -71,8 +71,10 @@ public class NetworkAdapter implements Runnable {
 	
 	public void disconnect() {
 		try {
-			clientSocket.close();
-			serverSocket.close();
+			if (clientSocket != null && !clientSocket.isClosed())
+				clientSocket.close();
+			if (serverSocket != null && !serverSocket.isClosed())
+				serverSocket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
