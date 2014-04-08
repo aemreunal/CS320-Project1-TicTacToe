@@ -17,7 +17,7 @@ public class Controller {
 	private JPanel remoteGameChoicePanel;
 	private JPanel gameBoard;
 	private NetworkAdapter netAdapter;
-	private GameModel gameModel;
+	private GameLogic gameModel;
 	private GameStatus status;
 	
 	public static void main(String[] args) {
