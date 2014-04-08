@@ -8,6 +8,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import Controller.Controller;
+
 public class NetworkAdapter {
 	private ServerSocket serverSocket;
 	private Socket clientSocket;
@@ -15,6 +17,11 @@ public class NetworkAdapter {
 	
 	private InputStream inputStream;
 	private OutputStream outputStream;
+	private Controller controller;
+	
+	public NetworkAdapter(Controller controller) {
+		this.controller = controller;
+	}
 	
 	
 	public void connect(String IP) throws UnknownHostException, IOException {

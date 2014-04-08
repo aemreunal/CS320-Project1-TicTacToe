@@ -3,6 +3,7 @@ package Controller;
 import javax.swing.JPanel;
 
 import Model.GameStatus;
+import Model.NetworkAdapter;
 
 /*
  * This code belongs to:
