@@ -1,6 +1,9 @@
 package View;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
+
+import Controller.Controller;
 
 /*
  * This code belongs to:
@@ -10,5 +13,27 @@ import javax.swing.JPanel;
  */
 
 public class GameBoard extends JPanel {
+	JButton[] boardButtons;
+	Controller controller;
+	
+	public GameBoard(Controller controller) {
+		this.controller = controller;
+	}
+	
+	public void createButton() {
+		boardButtons = new BoardButton[9];
+		for(int i = 0; i < 9; i++) {
+			boardButtons[i] = new BoardButton(controller, i);
+		}
+	}
+	
+	public void createLabel() {
+		
+	}
+	
+	public void setTurn(int turn) {
+		
+	}
+	
 	
 }

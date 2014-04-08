@@ -29,6 +29,15 @@ public class BoardButton extends JButton {
 		});
 	}
 	
+	
+	public void setButtonState(boolean state) {
+		setEnabled(state);
+	}
+	
+	public void setButtonText(String text) {
+		setText(text);
+	}
+	
 	public int getButtonID() {
 		return buttonID;
 	}
