@@ -3,16 +3,17 @@ package View;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import Controller.Controller;
+
 /*
  * This code belongs to:
  * Ahmet Emre Unal
  * S001974
  * emre.unal@ozu.edu.tr
  */
-import javax.swing.JButton;
 
 public class MainMenuPanel extends JPanel {
     private JButton localGameButton;

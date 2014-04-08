@@ -41,5 +41,6 @@ public class GameWindow extends JFrame {
         }
         currentPanel = nextPanel;
         add(nextPanel);
+        currentPanel.updateUI();
     }
 }
