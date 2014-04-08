@@ -29,6 +29,7 @@ public class NetworkAdapter implements Runnable {
 	public void connect(String IP){
 		try {
 			clientSocket = new Socket(InetAddress.getByName( IP ), 12345 );
+			controller.createGame(GameStatus.REMOTE_GAME);
 			inputStream = new ObjectInputStream(clientSocket.getInputStream());
 			outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
 		} catch (UnknownHostException e) {
