@@ -111,6 +111,7 @@ public class Controller {
     public void hostGameButtonPressed() {
         gameWindow.setTitle("Waiting for connection...");
         if (netAdapter.host()) {
+            System.out.println("Hosting game...");
             joinedGame = 0;
             createGame(GameStatus.REMOTE_GAME);
         }
@@ -122,6 +123,7 @@ public class Controller {
     
     public void connectButtonPressed(String ipAddr) {
         if (netAdapter.connect(ipAddr)) {
+            System.out.println("Joining game...");
             joinedGame = 1;
             createGame(GameStatus.REMOTE_GAME);
         }
