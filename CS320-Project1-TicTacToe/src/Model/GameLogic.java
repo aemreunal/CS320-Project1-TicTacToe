@@ -103,4 +103,8 @@ public class GameLogic {
     public int getTurn() {
         return turn;
     }
+
+    public Player getPlayer(){
+        return player;
+    }
 }
