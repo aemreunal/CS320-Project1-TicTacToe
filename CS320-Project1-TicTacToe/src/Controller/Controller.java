@@ -68,6 +68,9 @@ public class Controller {
         gameBoard = new GameBoard(this);
         gameWindow.setCurrentPanel(gameBoard);
         updateTurnLabel();
+        if (joinedGame == 1) {
+            startListeningForMove();
+        }
     }
     
     private void updateTurnLabel() {
@@ -134,16 +137,29 @@ public class Controller {
     
     public void boardButtonPressed(BoardButton button) {
         gameLogic.pressButton(button);
-        if (status == GameStatus.REMOTE_GAME) {
-            netAdapter.sendPacket(new MovePacket(button.getButtonID()));
-        }
         updateTurnLabel();
+        gameBoard.updateUI();
+        if (status == GameStatus.REMOTE_GAME) {
+            System.out.println("Sending move");
+            netAdapter.sendPacket(new MovePacket(button.getButtonID()));
+            System.out.println("Sent move");
+            startListeningForMove();
+        }
     }
     
-    public void boardButtonPressed(int buttonID) {
+    private void startListeningForMove() {
+        System.out.println("Start listening");
+        MovePacket packet = netAdapter.receivePacket();
+        System.out.println("Got move");
+        boardButtonPressed(packet.getButtonID());
+        System.out.println("Executed move");
+    }
+    
+    private void boardButtonPressed(int buttonID) {
         BoardButton pressedButton = gameBoard.getButton(buttonID);
         gameLogic.pressButton(pressedButton);
         updateTurnLabel();
+        gameBoard.updateUI();
     }
     
     public boolean isLocalGame() {

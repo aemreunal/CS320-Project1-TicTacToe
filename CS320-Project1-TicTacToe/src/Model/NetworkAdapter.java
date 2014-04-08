@@ -67,19 +67,18 @@ public class NetworkAdapter implements Runnable {
         return true;
     }
     
-    public Packet receivePacket() {
-        Packet packet = null;
+    public MovePacket receivePacket() {
         try {
             ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
-            packet = (Packet) in.readObject();
+            Packet packet = (Packet) in.readObject();
             MovePacket movePacket = (MovePacket) packet;
-            controller.boardButtonPressed(movePacket.getButtonID());
+            return movePacket;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return packet;
+        return null;
     }
     
     public boolean host() {
