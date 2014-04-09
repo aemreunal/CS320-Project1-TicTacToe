@@ -18,7 +18,8 @@ import Controller.Controller;
 public class NetworkAdapter implements Runnable {
     private ServerSocket serverSocket;
     private Socket clientSocket;
-    boolean isHost;
+    private boolean isHost;
+    private boolean listening = false;
     
     private InputStream inputStream;
     private OutputStream outputStream;
@@ -67,13 +68,25 @@ public class NetworkAdapter implements Runnable {
         }
     }
     
+    public synchronized void startListening() {
+        listening = true;
+    }
+    
+    public synchronized void stopListening() {
+        listening = false;
+    }
+    
+    public boolean isListening() {
+        return listening;
+    }
+    
     public boolean receivePacket() {
         try {
             ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
             Packet packet = (Packet) in.readObject();
             MovePacket movePacket = (MovePacket) packet;
             System.out.println("Got move " + movePacket.getButtonID());
-            controller.boardButtonPressed(movePacket.getButtonID());
+            controller.boardButtonPressedOverNetwork(movePacket.getButtonID());
             return true;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -114,9 +127,19 @@ public class NetworkAdapter implements Runnable {
     
     @Override
     public void run() {
-        if (!receivePacket()) {
-            controller.endGame(Winner.NOT_COMPLETED);
+        System.out.println("Entering while");
+        while (true) {
+            if (listening) {
+                if (Thread.currentThread().isInterrupted()) {
+                    break;
+                }
+                System.out.println("Now listening for packet...");
+                if (!receivePacket()) {
+                    controller.endGame(Winner.NOT_COMPLETED);
+                }
+                System.out.println("Got packet!");
+            }
         }
+        System.out.println("Exiting while!!");
     }
-    
 }

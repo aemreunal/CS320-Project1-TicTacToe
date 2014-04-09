@@ -34,16 +34,31 @@ public class Controller {
     }
     
     public Controller() {
-        netAdapter = new NetworkAdapter(this);
-        netAdapterThread = new Thread(netAdapter);
         gameWindow = new GameWindow(this);
         showMainMenu();
     }
     
+    private void createNetAdapter() {
+        if (netAdapter == null && netAdapterThread == null) {
+            netAdapter = new NetworkAdapter(this);
+            netAdapterThread = new Thread(netAdapter);
+            netAdapterThread.start();
+        }
+    }
+    
+    private void destroyNetAdapter() {
+        if (netAdapter != null && netAdapterThread != null) {
+            stopListeningForMove();
+            if (netAdapterThread.isAlive()) {
+                netAdapterThread.interrupt();
+            }
+            netAdapter.disconnect();
+            netAdapterThread = null;
+            netAdapter = null;
+        }
+    }
+    
     private void showMainMenu() {
-        netAdapter.disconnect();
-        stopListeningForMove();
-        status = GameStatus.NOT_RUNNING;
         gameWindow.setCurrentPanel(new MainMenuPanel(this));
     }
     
@@ -60,16 +75,17 @@ public class Controller {
     
     public void createGame(GameStatus status) {
         this.status = status;
+        gameBoard = new GameBoard(this);
+        gameWindow.setCurrentPanel(gameBoard);
         if (joinedGame == -1) {
             gameLogic = new GameLogic(this, netAdapter);
         } else if (joinedGame == 0 /* False, Player 1 */) {
             gameLogic = new GameLogic(this, netAdapter, Player.PLAYER_1);
+            stopListeningForMove();
         } else if (joinedGame == 1 /* True, Player 2 */) {
             gameLogic = new GameLogic(this, netAdapter, Player.PLAYER_2);
             startListeningForMove();
         }
-        gameBoard = new GameBoard(this);
-        gameWindow.setCurrentPanel(gameBoard);
         updateTurnLabel();
     }
     
@@ -78,14 +94,15 @@ public class Controller {
     }
     
     public void endGame(Winner winner) {
+        destroyNetAdapter();
         if (winner != Winner.NOT_COMPLETED || winner != null) {
             showGameEndDialogue(winner);
         }
-        showMainMenu();
         status = GameStatus.NOT_RUNNING;
         gameWindow.clearTurn();
         joinedGame = -1;
         gameBoard = null;
+        showMainMenu();
     }
     
     public void showNetworkTimeoutError() {
@@ -116,6 +133,7 @@ public class Controller {
     
     public void hostGameButtonPressed() {
         gameWindow.setTitle("Waiting for connection...");
+        createNetAdapter();
         if (netAdapter.host()) {
             System.out.println("Hosting game...");
             joinedGame = 0;
@@ -128,6 +146,7 @@ public class Controller {
     }
     
     public void connectButtonPressed(String ipAddr) {
+        createNetAdapter();
         if (netAdapter.connect(ipAddr)) {
             System.out.println("Joining game...");
             joinedGame = 1;
@@ -136,26 +155,32 @@ public class Controller {
     }
     
     public void boardButtonPressed(BoardButton button) {
-        boolean pressed = gameLogic.pressButton(button, false);
-        updateTurnLabel();
-        gameBoard.updateUI();
-        startListeningForMove();
+        if (gameLogic.pressButton(button, false)) {
+            gameBoard.updateUI();
+            updateTurnLabel();
+            startListeningForMove();
+        }
     }
     
-    public void boardButtonPressed(int buttonID) {
+    public synchronized void boardButtonPressedOverNetwork(int buttonID) {
+        stopListeningForMove();
         BoardButton pressedButton = gameBoard.getButton(buttonID);
         gameLogic.pressButton(pressedButton, true);
         updateTurnLabel();
         gameBoard.updateUI();
-        stopListeningForMove();
     }
     
     private void startListeningForMove() {
-        netAdapterThread.start();
+        if (status == GameStatus.REMOTE_GAME) {
+            netAdapter.startListening();
+        }
     }
     
     private void stopListeningForMove() {
-        netAdapterThread.suspend();
+        if (status == GameStatus.REMOTE_GAME) {
+            netAdapter.stopListening();
+        }
+        
     }
     
     public boolean isLocalGame() {

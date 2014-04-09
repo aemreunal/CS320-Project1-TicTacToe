@@ -6,23 +6,20 @@ import View.Player;
 
 public class GameLogic {
     private int[][] board;
-    private int turn;
-    private int current_player;
+    private Player turn = Player.PLAYER_1;
     private Controller controller;
     private NetworkAdapter netAdapter;
-    private Player player;
+    private Player currentPlayer;
     
     public GameLogic(Controller controller, NetworkAdapter netAdapter) {
         board = new int[3][3];
-        turn = -1; // Player 1 starts the game
-        current_player = -1;
         this.controller = controller;
         this.netAdapter = netAdapter;
     }
     
     public GameLogic(Controller controller, NetworkAdapter netAdapter, Player player) {
         this(controller, netAdapter);
-        this.player = player;
+        currentPlayer = player;
     }
     
     public void checkForAWin() {
@@ -72,47 +69,59 @@ public class GameLogic {
     
     public boolean pressButton(BoardButton button, boolean remoteMove) {
         if (!controller.isLocalGame() && !remoteMove) {
-            current_player = ((player.equals(Player.PLAYER_1)) ? -1 : 1);
-            if (turn != current_player) {
+            // If it is a remote game & not a remote move, then it may be a turn error.
+            if (turn != currentPlayer) {
                 controller.showTurnErrorDialogue();
                 return false;
             }
+            if (board[button.getButtonID() / 3][button.getButtonID() % 3] != 0) {
+                return false;
+            }
         }
-        if (controller.getGameStatus() == GameStatus.REMOTE_GAME) {
-            netAdapter.sendPacket(new MovePacket(button.getButtonID()));
-        }
-        button.setButtonState(false);
-        int id = button.getButtonID();
-        if (turn == -1) {
-            button.setText("X");
-        } else {
-            button.setText("O");
-        }
-        setPiece(id / 3, id % 3);
-        checkForAWin();
+        sendButton(button);
+        setButtonProperties(button);
+        updateModel(button.getButtonID());
         return true;
     }
     
-    private void setPiece(int x, int y) {
-        board[x][y] = turn;
+    private void updateModel(int buttonID) {
+        setPiece(buttonID / 3, buttonID % 3);
+        checkForAWin();
         changeTurn();
     }
     
+    private void setButtonProperties(BoardButton button) {
+        button.setButtonState(false);
+        if (turn == Player.PLAYER_1) {
+            button.setText("X");
+        } else if (turn == Player.PLAYER_2) {
+            button.setText("O");
+        }
+    }
+    
+    private void sendButton(BoardButton button) {
+        if (controller.getGameStatus() == GameStatus.REMOTE_GAME) {
+            netAdapter.sendPacket(new MovePacket(button.getButtonID()));
+        }
+    }
+    
+    private void setPiece(int x, int y) {
+        board[x][y] = (turn == Player.PLAYER_1 ? -1 : 1);
+    }
+    
     public void changeTurn() {
-        if (turn == 1) {
-            turn = -1;
-            current_player = -1;
+        if (turn == Player.PLAYER_1) {
+            turn = Player.PLAYER_2;
         } else {
-            turn = 1;
-            current_player = 1;
+            turn = Player.PLAYER_1;
         }
     }
     
     public Player getTurn() {
-        return turn == -1 ? Player.PLAYER_1 : Player.PLAYER_2;
+        return turn;
     }
     
     public Player getPlayer() {
-        return player;
+        return currentPlayer;
     }
 }
