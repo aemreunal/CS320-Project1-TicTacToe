@@ -25,6 +25,8 @@ public class NetworkAdapter implements Runnable {
     private OutputStream outputStream;
     private Controller controller;
     
+    private boolean gameHasNotStarted = true;
+    
     private static final int PORT = 53784;
     
     public NetworkAdapter(Controller controller) {
@@ -71,6 +73,7 @@ public class NetworkAdapter implements Runnable {
     }
     
     public synchronized void startListening() {
+        gameHasNotStarted = false;
         listening = true;
     }
     
@@ -129,7 +132,9 @@ public class NetworkAdapter implements Runnable {
     
     @Override
     public void run() {
-        System.out.println("Entering while");
+        while (gameHasNotStarted) {
+            ;
+        }
         while (true) {
             if (listening) {
                 if (Thread.currentThread().isInterrupted()) {
@@ -142,6 +147,5 @@ public class NetworkAdapter implements Runnable {
                 System.out.println("Got packet!");
             }
         }
-        System.out.println("Exiting while!!");
     }
 }
