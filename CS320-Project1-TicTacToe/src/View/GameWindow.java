@@ -26,7 +26,7 @@ public class GameWindow extends JFrame {
     }
     
     private void setWindowProperties() {
-        setSize(300, 500);
+        setSize(400, 500);
         setVisible(true);
         addWindowListener(new WindowAdapter() {
             @Override
@@ -57,6 +57,10 @@ public class GameWindow extends JFrame {
                 setTitle("Player: " + getPlayerText(thisPlayer) + " | Turn: " + getPlayerText(turn));
             }
         }
+    }
+    
+    public void indicateWaiting() {
+        setTitle(getTitle() + " (Waiting net...)");
     }
     
     private String getPlayerText(Player player) {

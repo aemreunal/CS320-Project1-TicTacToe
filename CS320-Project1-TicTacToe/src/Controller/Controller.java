@@ -1,6 +1,10 @@
 package Controller;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 
 import Model.GameLogic;
 import Model.GameStatus;
@@ -29,13 +33,26 @@ public class Controller {
     private GameStatus status = GameStatus.NOT_RUNNING;
     private int joinedGame = -1;
     
+    private Timer timer = null;
+    
     public static void main(String[] args) {
         new Controller();
     }
     
     public Controller() {
         gameWindow = new GameWindow(this);
+        createPacketReadTimer();
         showMainMenu();
+    }
+    
+    private void createPacketReadTimer() {
+        timer = new Timer(10, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                receiveMove();
+                timer.stop();
+            }
+        });
     }
     
     private void createNetAdapter() {
@@ -150,7 +167,8 @@ public class Controller {
         if (gameLogic.pressButton(button, false)) {
             if (gameBoard != null) {
                 updateTurnLabel();
-                receiveMove();
+                gameWindow.indicateWaiting();
+                timer.start();
             }
         }
     }
