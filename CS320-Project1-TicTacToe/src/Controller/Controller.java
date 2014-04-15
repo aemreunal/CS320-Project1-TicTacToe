@@ -149,7 +149,6 @@ public class Controller {
     public void boardButtonPressed(BoardButton button) {
         if (gameLogic.pressButton(button, false)) {
             if (gameBoard != null) {
-                gameBoard.updateUI();
                 updateTurnLabel();
                 receiveMove();
             }
@@ -164,8 +163,9 @@ public class Controller {
     public synchronized void boardButtonPressedOverNetwork(int buttonID) {
         BoardButton pressedButton = gameBoard.getButton(buttonID);
         gameLogic.pressButton(pressedButton, true);
-        updateTurnLabel();
-        gameBoard.updateUI();
+        if (gameBoard != null) {
+            updateTurnLabel();
+        }
     }
     
     public boolean isLocalGame() {
