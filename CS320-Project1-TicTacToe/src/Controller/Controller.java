@@ -156,9 +156,11 @@ public class Controller {
     
     public void boardButtonPressed(BoardButton button) {
         if (gameLogic.pressButton(button, false)) {
-            gameBoard.updateUI();
-            updateTurnLabel();
-            startListeningForMove();
+            if (gameBoard != null) {
+                gameBoard.updateUI();
+                updateTurnLabel();
+                startListeningForMove();
+            }
         }
     }
     
