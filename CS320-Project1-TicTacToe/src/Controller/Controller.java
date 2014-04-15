@@ -176,7 +176,11 @@ public class Controller {
     private void receiveMove() {
         if (status == GameStatus.REMOTE_GAME) {
             MovePacket packet = netAdapter.receivePacket();
-            boardButtonPressedOverNetwork(packet.getButtonID());
+            if (packet != null) {
+                boardButtonPressedOverNetwork(packet.getButtonID());
+            } else {
+                endGame(null);
+            }
         }
     }
     

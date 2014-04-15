@@ -1,5 +1,6 @@
 package Model;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -66,6 +67,9 @@ public class NetworkAdapter {
             return (MovePacket) in.readObject();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+        } catch (EOFException e) {
+            // e.printStackTrace();
+            controller.showNetworkTimeoutError();
         } catch (IOException e) {
             e.printStackTrace();
         }
