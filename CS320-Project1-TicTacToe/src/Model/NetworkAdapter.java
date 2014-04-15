@@ -25,6 +25,10 @@ public class NetworkAdapter implements Runnable {
     private OutputStream outputStream;
     private Controller controller;
     
+    private boolean gameHasNotStarted = true;
+    
+    private static final int PORT = 53784;
+    
     public NetworkAdapter(Controller controller) {
         this.controller = controller;
     }
@@ -33,7 +37,7 @@ public class NetworkAdapter implements Runnable {
         try {
             clientSocket = new Socket();
             System.out.println("Created socket");
-            clientSocket.connect(new InetSocketAddress(InetAddress.getByName(IP), 12345), 5000);
+            clientSocket.connect(new InetSocketAddress(InetAddress.getByName(IP), PORT), 5000);
             System.out.println("Connected to socket");
             inputStream = clientSocket.getInputStream();
             System.out.println("Input stream created");
@@ -66,6 +70,10 @@ public class NetworkAdapter implements Runnable {
             System.err.println("Unable to create the ObjectOutputStream!");
             e.printStackTrace();
         }
+    }
+    
+    public void startNetInterface() {
+        gameHasNotStarted = false;
     }
     
     public synchronized void startListening() {
@@ -101,7 +109,7 @@ public class NetworkAdapter implements Runnable {
     
     public boolean host() {
         try {
-            serverSocket = new ServerSocket(12345);
+            serverSocket = new ServerSocket(PORT);
             clientSocket = serverSocket.accept();
             
             return true;
@@ -127,7 +135,6 @@ public class NetworkAdapter implements Runnable {
     
     @Override
     public void run() {
-        System.out.println("Entering while");
         while (true) {
             if (listening) {
                 if (Thread.currentThread().isInterrupted()) {
@@ -140,6 +147,5 @@ public class NetworkAdapter implements Runnable {
                 System.out.println("Got packet!");
             }
         }
-        System.out.println("Exiting while!!");
     }
 }
