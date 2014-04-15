@@ -25,6 +25,8 @@ public class NetworkAdapter implements Runnable {
     private OutputStream outputStream;
     private Controller controller;
     
+    private static final int PORT = 53784;
+    
     public NetworkAdapter(Controller controller) {
         this.controller = controller;
     }
@@ -33,7 +35,7 @@ public class NetworkAdapter implements Runnable {
         try {
             clientSocket = new Socket();
             System.out.println("Created socket");
-            clientSocket.connect(new InetSocketAddress(InetAddress.getByName(IP), 12345), 5000);
+            clientSocket.connect(new InetSocketAddress(InetAddress.getByName(IP), PORT), 5000);
             System.out.println("Connected to socket");
             inputStream = clientSocket.getInputStream();
             System.out.println("Input stream created");
