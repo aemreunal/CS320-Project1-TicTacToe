@@ -109,7 +109,7 @@ public class NetworkAdapter implements Runnable {
     
     public boolean host() {
         try {
-            serverSocket = new ServerSocket(12345);
+            serverSocket = new ServerSocket(PORT);
             clientSocket = serverSocket.accept();
             
             return true;

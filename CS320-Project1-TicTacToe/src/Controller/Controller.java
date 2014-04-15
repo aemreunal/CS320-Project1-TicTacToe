@@ -164,7 +164,6 @@ public class Controller {
             if (gameBoard != null) {
                 gameBoard.updateUI();
                 updateTurnLabel();
-                startListeningForMove();
             }
         }
     }
@@ -177,7 +176,7 @@ public class Controller {
         gameBoard.updateUI();
     }
     
-    private void startListeningForMove() {
+    public void startListeningForMove() {
         if (status == GameStatus.REMOTE_GAME) {
             netAdapter.startListening();
         }
