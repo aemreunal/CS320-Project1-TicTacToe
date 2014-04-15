@@ -19,13 +19,11 @@ public class NetworkAdapter implements Runnable {
     private ServerSocket serverSocket;
     private Socket clientSocket;
     private boolean isHost;
-    private boolean listening = false;
+    private boolean listening = true;
     
     private InputStream inputStream;
     private OutputStream outputStream;
     private Controller controller;
-    
-    private boolean gameHasNotStarted = true;
     
     private static final int PORT = 53784;
     
@@ -70,10 +68,6 @@ public class NetworkAdapter implements Runnable {
             System.err.println("Unable to create the ObjectOutputStream!");
             e.printStackTrace();
         }
-    }
-    
-    public void startNetInterface() {
-        gameHasNotStarted = false;
     }
     
     public synchronized void startListening() {

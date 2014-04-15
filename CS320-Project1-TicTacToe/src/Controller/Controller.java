@@ -187,7 +187,6 @@ public class Controller {
         if (status == GameStatus.REMOTE_GAME) {
             netAdapter.stopListening();
         }
-        
     }
     
     public boolean isLocalGame() {
