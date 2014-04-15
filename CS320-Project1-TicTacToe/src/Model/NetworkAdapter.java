@@ -135,9 +135,12 @@ public class NetworkAdapter implements Runnable {
     
     @Override
     public void run() {
+        System.out.println("Network thread starting!");
         while (true) {
             if (listening) {
+                System.out.println("Started listening");
                 if (Thread.currentThread().isInterrupted()) {
+                    System.out.println("STOPPING THREAD");
                     break;
                 }
                 System.out.println("Now listening for packet...");

@@ -164,6 +164,7 @@ public class Controller {
             if (gameBoard != null) {
                 gameBoard.updateUI();
                 updateTurnLabel();
+                startListeningForMove();
             }
         }
     }
