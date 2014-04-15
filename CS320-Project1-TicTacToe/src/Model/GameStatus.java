@@ -8,5 +8,5 @@ package Model;
  */
 
 public enum GameStatus {
-	NOT_RUNNING, LOCAL_GAME, REMOTE_GAME
+    NOT_RUNNING, LOCAL_GAME, REMOTE_GAME
 }

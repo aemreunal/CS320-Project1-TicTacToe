@@ -98,10 +98,6 @@ public class Controller {
         updateTurnLabel();
     }
     
-    private void updateTurnLabel() {
-        gameWindow.setTurn(gameLogic.getPlayer(), gameLogic.getTurn());
-    }
-    
     public void endGame(Winner winner) {
         destroyNetAdapter();
         if (winner != Winner.NOT_COMPLETED || winner != null) {
@@ -112,10 +108,6 @@ public class Controller {
         joinedGame = -1;
         gameBoard = null;
         showMainMenu();
-    }
-    
-    public void showNetworkTimeoutError() {
-        JOptionPane.showMessageDialog(gameWindow, "Could not connect to host!");
     }
     
     private void showGameEndDialogue(Winner winner) {
@@ -130,6 +122,10 @@ public class Controller {
     
     public void showTurnErrorDialogue() {
         JOptionPane.showMessageDialog(gameWindow, "Please wait for the other player to play.");
+    }
+    
+    public void showNetworkTimeoutError() {
+        JOptionPane.showMessageDialog(gameWindow, "Could not connect to host!");
     }
     
     public void localGameButtonPressed() {
@@ -198,5 +194,9 @@ public class Controller {
     
     public GameStatus getGameStatus() {
         return status;
+    }
+    
+    private void updateTurnLabel() {
+        gameWindow.setTurn(gameLogic.getPlayer(), gameLogic.getTurn());
     }
 }
