@@ -2,6 +2,7 @@ package Model;
 
 import java.io.Serializable;
 
+@SuppressWarnings("serial")
 public class MovePacket implements Serializable {
     private int buttonID;
     

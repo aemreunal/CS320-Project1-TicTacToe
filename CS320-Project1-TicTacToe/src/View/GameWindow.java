@@ -16,6 +16,7 @@ import Model.GameStatus;
  * emre.unal@ozu.edu.tr
  */
 
+@SuppressWarnings("serial")
 public class GameWindow extends JFrame {
     private JPanel currentPanel = null;
     private Controller controller;

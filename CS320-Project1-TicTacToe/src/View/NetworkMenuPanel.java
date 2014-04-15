@@ -15,6 +15,7 @@ import Controller.Controller;
  * emre.unal@ozu.edu.tr
  */
 
+@SuppressWarnings("serial")
 public class NetworkMenuPanel extends JPanel {
     private JButton hostGameButton;
     private JButton joinGameButton;

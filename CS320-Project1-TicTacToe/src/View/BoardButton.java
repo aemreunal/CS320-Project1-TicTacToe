@@ -14,6 +14,7 @@ import Controller.Controller;
  * emre.unal@ozu.edu.tr
  */
 
+@SuppressWarnings("serial")
 public class BoardButton extends JButton {
     private int buttonID;
     private Controller controller;

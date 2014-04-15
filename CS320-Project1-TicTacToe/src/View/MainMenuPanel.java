@@ -15,6 +15,7 @@ import Controller.Controller;
  * emre.unal@ozu.edu.tr
  */
 
+@SuppressWarnings("serial")
 public class MainMenuPanel extends JPanel {
     private JButton localGameButton;
     private JButton remoteGameButton;

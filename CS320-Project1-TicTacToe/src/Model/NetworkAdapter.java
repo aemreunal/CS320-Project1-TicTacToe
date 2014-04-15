@@ -1,24 +1,20 @@
 package Model;
 
-import java.io.EOFException;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
 
 import Controller.Controller;
 
 public class NetworkAdapter {
     private static final int TIMEOUT = 5000;
     private static final int PORT = 12345;
+    
     private ServerSocket serverSocket;
     private Socket clientSocket;
-    boolean isHost;
     
     private Controller controller;
     
@@ -26,24 +22,27 @@ public class NetworkAdapter {
         this.controller = controller;
     }
     
+    public boolean host() {
+        try {
+            serverSocket = new ServerSocket(PORT);
+            clientSocket = serverSocket.accept();
+            return true;
+        } catch (Exception e) {
+            controller.showNetworkTimeoutError();
+            controller.endGame(null);
+        }
+        return false;
+    }
+    
     public boolean connect(String IP) {
         try {
             clientSocket = new Socket();
-            System.out.println("Created socket");
             clientSocket.connect(new InetSocketAddress(InetAddress.getByName(IP), PORT), TIMEOUT);
-            System.out.println("Connected to socket");
             return true;
-        } catch (SocketTimeoutException e) {
-            System.err.println("Timeout error!");
+        } catch (Exception e) {
             controller.showNetworkTimeoutError();
-        } catch (UnknownHostException e) {
-            System.err.println("Unknown host error!");
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.err.println("IO error!");
-            e.printStackTrace();
+            controller.endGame(null);
         }
-        System.err.println("Unable to connect!");
         return false;
     }
     
@@ -52,11 +51,9 @@ public class NetworkAdapter {
             ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
             out.writeObject(packet);
             out.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
-            System.err.println("Unable to create the ObjectOutputStream!");
-            e.printStackTrace();
+        } catch (Exception e) {
+            controller.showNetworkTimeoutError();
+            controller.endGame(null);
         }
         return true;
     }
@@ -65,27 +62,11 @@ public class NetworkAdapter {
         try {
             ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
             return (MovePacket) in.readObject();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (EOFException e) {
-            // e.printStackTrace();
+        } catch (Exception e) {
             controller.showNetworkTimeoutError();
-        } catch (IOException e) {
-            e.printStackTrace();
+            controller.endGame(null);
         }
         return null;
-    }
-    
-    public boolean host() {
-        try {
-            serverSocket = new ServerSocket(PORT);
-            clientSocket = serverSocket.accept();
-            
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
     }
     
     public void disconnect() {
@@ -96,10 +77,8 @@ public class NetworkAdapter {
             if (serverSocket != null && !serverSocket.isClosed()) {
                 serverSocket.close();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            controller.showNetworkTimeoutError();
         }
-        
     }
-    
 }

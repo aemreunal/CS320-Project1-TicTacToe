@@ -13,6 +13,7 @@ import Controller.Controller;
  * emre.unal@ozu.edu.tr
  */
 
+@SuppressWarnings("serial")
 public class GameBoard extends JPanel {
     BoardButton[] boardButtons;
     Controller controller;
