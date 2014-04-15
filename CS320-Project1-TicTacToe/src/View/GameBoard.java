@@ -9,8 +9,9 @@ import Controller.Controller;
 /*
  * This code belongs to:
  * Ahmet Emre Unal
- * S001974
- * emre.unal@ozu.edu.tr
+ * Eren Sezener
+ * Deniz Sokmen
+ * Erdi Gultekin
  */
 
 @SuppressWarnings("serial")

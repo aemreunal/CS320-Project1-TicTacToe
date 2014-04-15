@@ -9,6 +9,14 @@ import java.net.Socket;
 
 import Controller.Controller;
 
+/*
+ * This code belongs to:
+ * Ahmet Emre Unal
+ * Eren Sezener
+ * Deniz Sokmen
+ * Erdi Gultekin
+ */
+
 public class NetworkAdapter {
     private static final int TIMEOUT = 5000;
     private static final int PORT = 12345;

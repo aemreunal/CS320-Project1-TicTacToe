@@ -4,6 +4,14 @@ import Controller.Controller;
 import View.BoardButton;
 import View.Player;
 
+/*
+ * This code belongs to:
+ * Ahmet Emre Unal
+ * Eren Sezener
+ * Deniz Sokmen
+ * Erdi Gultekin
+ */
+
 public class GameLogic {
     private int[][] board;
     private Player turn = Player.PLAYER_1;
