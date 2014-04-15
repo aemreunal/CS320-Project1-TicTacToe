@@ -42,8 +42,11 @@ public class Controller {
         if (netAdapter == null && netAdapterThread == null) {
             netAdapter = new NetworkAdapter(this);
             netAdapterThread = new Thread(netAdapter);
-            netAdapterThread.start();
         }
+    }
+    
+    private void startNetAdapter() {
+        netAdapterThread.start();
     }
     
     private void destroyNetAdapter() {
@@ -82,9 +85,11 @@ public class Controller {
         } else if (joinedGame == 0 /* False, Player 1 */) {
             gameLogic = new GameLogic(this, netAdapter, Player.PLAYER_1);
             stopListeningForMove();
+            startNetAdapter();
         } else if (joinedGame == 1 /* True, Player 2 */) {
             gameLogic = new GameLogic(this, netAdapter, Player.PLAYER_2);
             startListeningForMove();
+            startNetAdapter();
         }
         updateTurnLabel();
     }

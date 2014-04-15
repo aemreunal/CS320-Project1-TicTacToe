@@ -72,8 +72,11 @@ public class NetworkAdapter implements Runnable {
         }
     }
     
-    public synchronized void startListening() {
+    public void startNetInterface() {
         gameHasNotStarted = false;
+    }
+    
+    public synchronized void startListening() {
         listening = true;
     }
     
@@ -132,9 +135,6 @@ public class NetworkAdapter implements Runnable {
     
     @Override
     public void run() {
-        while (gameHasNotStarted) {
-            ;
-        }
         while (true) {
             if (listening) {
                 if (Thread.currentThread().isInterrupted()) {
