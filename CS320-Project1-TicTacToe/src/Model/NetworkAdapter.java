@@ -1,6 +1,5 @@
 package Model;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -15,17 +14,16 @@ import java.net.UnknownHostException;
 
 import Controller.Controller;
 
-public class NetworkAdapter implements Runnable {
+public class NetworkAdapter {
+    private static final int TIMEOUT = 5000;
+    private static final int PORT = 12345;
     private ServerSocket serverSocket;
     private Socket clientSocket;
-    private boolean isHost;
-    private boolean listening = true;
+    boolean isHost;
     
     private InputStream inputStream;
     private OutputStream outputStream;
     private Controller controller;
-    
-    private static final int PORT = 53784;
     
     public NetworkAdapter(Controller controller) {
         this.controller = controller;
@@ -35,7 +33,7 @@ public class NetworkAdapter implements Runnable {
         try {
             clientSocket = new Socket();
             System.out.println("Created socket");
-            clientSocket.connect(new InetSocketAddress(InetAddress.getByName(IP), PORT), 5000);
+            clientSocket.connect(new InetSocketAddress(InetAddress.getByName(IP), PORT), TIMEOUT);
             System.out.println("Connected to socket");
             inputStream = clientSocket.getInputStream();
             System.out.println("Input stream created");
@@ -57,7 +55,7 @@ public class NetworkAdapter implements Runnable {
         return false;
     }
     
-    public void sendPacket(Packet packet) {
+    public boolean sendPacket(Packet packet) {
         try {
             ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
             out.writeObject(packet);
@@ -68,37 +66,21 @@ public class NetworkAdapter implements Runnable {
             System.err.println("Unable to create the ObjectOutputStream!");
             e.printStackTrace();
         }
+        return true;
     }
     
-    public synchronized void startListening() {
-        listening = true;
-    }
-    
-    public synchronized void stopListening() {
-        listening = false;
-    }
-    
-    public boolean isListening() {
-        return listening;
-    }
-    
-    public boolean receivePacket() {
+    public MovePacket receivePacket() {
         try {
             ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
             Packet packet = (Packet) in.readObject();
             MovePacket movePacket = (MovePacket) packet;
-            System.out.println("Got move " + movePacket.getButtonID());
-            controller.boardButtonPressedOverNetwork(movePacket.getButtonID());
-            return true;
+            return movePacket;
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (EOFException e) {
-            // Means the connection is terminated
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return false;
+        return null;
     }
     
     public boolean host() {
@@ -127,22 +109,4 @@ public class NetworkAdapter implements Runnable {
         
     }
     
-    @Override
-    public void run() {
-        System.out.println("Network thread starting!");
-        while (true) {
-            if (listening) {
-                System.out.println("Started listening");
-                if (Thread.currentThread().isInterrupted()) {
-                    System.out.println("STOPPING THREAD");
-                    break;
-                }
-                System.out.println("Now listening for packet...");
-                if (!receivePacket()) {
-                    controller.endGame(Winner.NOT_COMPLETED);
-                }
-                System.out.println("Got packet!");
-            }
-        }
-    }
 }

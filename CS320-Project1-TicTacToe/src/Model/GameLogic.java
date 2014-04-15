@@ -77,17 +77,11 @@ public class GameLogic {
             if (board[button.getButtonID() / 3][button.getButtonID() % 3] != 0) {
                 return false;
             }
+            sendButton(button);
         }
-        sendButton(button);
         setButtonProperties(button);
         updateModel(button.getButtonID());
         return true;
-    }
-    
-    private void updateModel(int buttonID) {
-        setPiece(buttonID / 3, buttonID % 3);
-        checkForAWin();
-        changeTurn();
     }
     
     private void setButtonProperties(BoardButton button) {
@@ -97,6 +91,12 @@ public class GameLogic {
         } else if (turn == Player.PLAYER_2) {
             button.setText("O");
         }
+    }
+    
+    private void updateModel(int buttonID) {
+        setPiece(buttonID / 3, buttonID % 3);
+        checkForAWin();
+        changeTurn();
     }
     
     private void sendButton(BoardButton button) {

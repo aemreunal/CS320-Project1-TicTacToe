@@ -4,6 +4,7 @@ import javax.swing.JOptionPane;
 
 import Model.GameLogic;
 import Model.GameStatus;
+import Model.MovePacket;
 import Model.NetworkAdapter;
 import Model.Winner;
 import View.BoardButton;
@@ -23,7 +24,6 @@ import View.Player;
 public class Controller {
     private GameWindow gameWindow;
     private NetworkAdapter netAdapter;
-    private Thread netAdapterThread;
     private GameLogic gameLogic;
     private GameBoard gameBoard;
     private GameStatus status = GameStatus.NOT_RUNNING;
@@ -39,24 +39,14 @@ public class Controller {
     }
     
     private void createNetAdapter() {
-        if (netAdapter == null && netAdapterThread == null) {
+        if (netAdapter == null) {
             netAdapter = new NetworkAdapter(this);
-            netAdapterThread = new Thread(netAdapter);
         }
     }
     
-    private void startNetAdapter() {
-        netAdapterThread.start();
-    }
-    
     private void destroyNetAdapter() {
-        if (netAdapter != null && netAdapterThread != null) {
-            stopListeningForMove();
-            if (netAdapterThread.isAlive()) {
-                netAdapterThread.interrupt();
-            }
+        if (netAdapter != null) {
             netAdapter.disconnect();
-            netAdapterThread = null;
             netAdapter = null;
         }
     }
@@ -84,12 +74,9 @@ public class Controller {
             gameLogic = new GameLogic(this, netAdapter);
         } else if (joinedGame == 0 /* False, Player 1 */) {
             gameLogic = new GameLogic(this, netAdapter, Player.PLAYER_1);
-            stopListeningForMove();
-            startNetAdapter();
         } else if (joinedGame == 1 /* True, Player 2 */) {
             gameLogic = new GameLogic(this, netAdapter, Player.PLAYER_2);
-            startListeningForMove();
-            startNetAdapter();
+            receiveMove();
         }
         updateTurnLabel();
     }
@@ -164,29 +151,21 @@ public class Controller {
             if (gameBoard != null) {
                 gameBoard.updateUI();
                 updateTurnLabel();
-                startListeningForMove();
+                receiveMove();
             }
         }
     }
     
+    private void receiveMove() {
+        MovePacket packet = netAdapter.receivePacket();
+        boardButtonPressedOverNetwork(packet.getButtonID());
+    }
+    
     public synchronized void boardButtonPressedOverNetwork(int buttonID) {
-        stopListeningForMove();
         BoardButton pressedButton = gameBoard.getButton(buttonID);
         gameLogic.pressButton(pressedButton, true);
         updateTurnLabel();
         gameBoard.updateUI();
-    }
-    
-    public void startListeningForMove() {
-        if (status == GameStatus.REMOTE_GAME) {
-            netAdapter.startListening();
-        }
-    }
-    
-    private void stopListeningForMove() {
-        if (status == GameStatus.REMOTE_GAME) {
-            netAdapter.stopListening();
-        }
     }
     
     public boolean isLocalGame() {
