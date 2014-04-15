@@ -93,7 +93,7 @@ public class Controller {
             gameLogic = new GameLogic(this, netAdapter, Player.PLAYER_1);
         } else if (joinedGame == 1 /* True, Player 2 */) {
             gameLogic = new GameLogic(this, netAdapter, Player.PLAYER_2);
-            receiveMove();
+            timer.start();
         }
         updateTurnLabel();
     }
@@ -174,8 +174,10 @@ public class Controller {
     }
     
     private void receiveMove() {
-        MovePacket packet = netAdapter.receivePacket();
-        boardButtonPressedOverNetwork(packet.getButtonID());
+        if (status == GameStatus.REMOTE_GAME) {
+            MovePacket packet = netAdapter.receivePacket();
+            boardButtonPressedOverNetwork(packet.getButtonID());
+        }
     }
     
     public synchronized void boardButtonPressedOverNetwork(int buttonID) {

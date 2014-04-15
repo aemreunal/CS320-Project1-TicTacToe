@@ -1,10 +1,8 @@
 package Model;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -21,8 +19,6 @@ public class NetworkAdapter {
     private Socket clientSocket;
     boolean isHost;
     
-    private InputStream inputStream;
-    private OutputStream outputStream;
     private Controller controller;
     
     public NetworkAdapter(Controller controller) {
@@ -35,11 +31,6 @@ public class NetworkAdapter {
             System.out.println("Created socket");
             clientSocket.connect(new InetSocketAddress(InetAddress.getByName(IP), PORT), TIMEOUT);
             System.out.println("Connected to socket");
-            inputStream = clientSocket.getInputStream();
-            System.out.println("Input stream created");
-            outputStream = clientSocket.getOutputStream();
-            System.out.println("Output stream created");
-            System.out.println("Connection success!");
             return true;
         } catch (SocketTimeoutException e) {
             System.err.println("Timeout error!");
@@ -55,7 +46,7 @@ public class NetworkAdapter {
         return false;
     }
     
-    public boolean sendPacket(Packet packet) {
+    public boolean sendPacket(MovePacket packet) {
         try {
             ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
             out.writeObject(packet);
@@ -72,9 +63,7 @@ public class NetworkAdapter {
     public MovePacket receivePacket() {
         try {
             ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
-            Packet packet = (Packet) in.readObject();
-            MovePacket movePacket = (MovePacket) packet;
-            return movePacket;
+            return (MovePacket) in.readObject();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

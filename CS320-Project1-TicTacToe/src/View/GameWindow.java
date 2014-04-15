@@ -60,7 +60,9 @@ public class GameWindow extends JFrame {
     }
     
     public void indicateWaiting() {
-        setTitle(getTitle() + " (Waiting net...)");
+        if (controller.getGameStatus() == GameStatus.REMOTE_GAME) {
+            setTitle(getTitle() + " (Waiting net...)");
+        }
     }
     
     private String getPlayerText(Player player) {

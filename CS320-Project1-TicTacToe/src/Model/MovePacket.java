@@ -1,6 +1,8 @@
 package Model;
 
-public class MovePacket extends Packet {
+import java.io.Serializable;
+
+public class MovePacket implements Serializable {
     private int buttonID;
     
     public MovePacket(int buttonID) {
